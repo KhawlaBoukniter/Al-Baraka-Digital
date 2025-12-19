@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 
 @Service
 @RequiredArgsConstructor
-public class OperationServiceImpl {
+public class OperationServiceImpl implements OperationService {
 
     private final OperationRepository operationRepository;
     private final AccountRepository accountRepository;
@@ -35,6 +35,33 @@ public class OperationServiceImpl {
             operation.setStatus(OperationStatus.EXECUTED);
             operation.setExecutedAt(LocalDateTime.now());
             account.setBalance(account.getBalance() + amount);
+            accountRepository.save(account);
+        } else {
+            operation.setStatus(OperationStatus.PENDING);
+        }
+
+        return operationRepository.save(operation);
+    }
+
+    @Transactional
+    public Operation createWithdrawal(Long accountId, Double amount) {
+        Account account = accountRepository.findById(accountId)
+                .orElseThrow(() -> new RuntimeException("Compte non trouvé"));
+
+        if (account.getBalance() < amount) {
+            throw new RuntimeException("Solde insuffisant");
+        }
+
+        Operation operation = new Operation();
+        operation.setType(OperationType.WITHDRAWAL);
+        operation.setAmount(amount);
+        operation.setCreatedAt(LocalDateTime.now());
+        operation.setAccountSource(account);
+
+        if (amount <= 10000.0) {
+            operation.setStatus(OperationStatus.EXECUTED);
+            operation.setExecutedAt(LocalDateTime.now());
+            account.setBalance(account.getBalance() - amount);
             accountRepository.save(account);
         } else {
             operation.setStatus(OperationStatus.PENDING);

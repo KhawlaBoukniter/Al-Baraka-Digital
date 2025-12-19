@@ -2,8 +2,8 @@ package org.albarakadigital.controller;
 
 import org.albarakadigital.entity.Operation;
 import org.albarakadigital.entity.User;
-import org.albarakadigital.service.ClientServiceImpl;
-import org.albarakadigital.service.OperationServiceImpl;
+import org.albarakadigital.service.ClientService;
+import org.albarakadigital.service.OperationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -17,8 +17,8 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class ClientController {
 
-    private final ClientServiceImpl clientService;
-    private final OperationServiceImpl operationService;
+    private final ClientService clientService;
+    private final OperationService operationService;
 
     @PostMapping("/api/client/register")
     public ResponseEntity<String> register(@RequestBody Map<String, String> payload) {
@@ -36,13 +36,19 @@ public class ClientController {
         String type = (String) payload.get("type");
         double amount = Double.parseDouble(payload.get("amount").toString());
 
+        String email = authentication.getName();
+        User user = clientService.getUserByEmail(email);
+        Long accountId = user.getAccount().getId();
+
+        Operation operation;
         if ("DEPOSIT".equals(type)) {
-            String email = authentication.getName();
-            User user = clientService.getUserByEmail(email);
-            Operation operation = operationService.createDeposit(user.getAccount().getId(), amount);
-            return ResponseEntity.ok("Dépôt créé avec ID : " + operation.getId());
+            operation = operationService.createDeposit(accountId, amount);
+        } else if ("WITHDRAWAL".equals(type)) {
+            operation = operationService.createWithdrawal(accountId, amount);
+        } else {
+            return ResponseEntity.badRequest().body("Type d'opération non supporté");
         }
 
-        return ResponseEntity.badRequest().body("Type d'opération non supporté");
+        return ResponseEntity.ok("Opération créée avec ID : " + operation.getId());
     }
 }

@@ -38,13 +38,16 @@ public class ClientController {
 
         String email = authentication.getName();
         User user = clientService.getUserByEmail(email);
-        Long accountId = user.getAccount().getId();
+        Long sourceAccountId = user.getAccount().getId();
 
         Operation operation;
         if ("DEPOSIT".equals(type)) {
-            operation = operationService.createDeposit(accountId, amount);
+            operation = operationService.createDeposit(sourceAccountId, amount);
         } else if ("WITHDRAWAL".equals(type)) {
-            operation = operationService.createWithdrawal(accountId, amount);
+            operation = operationService.createWithdrawal(sourceAccountId, amount);
+        } else if ("TRANSFER".equals(type)) {
+            String destinationAccountNumber = (String) payload.get("destinationAccountNumber");
+            operation = operationService.createTransfer(sourceAccountId, destinationAccountNumber, amount);
         } else {
             return ResponseEntity.badRequest().body("Type d'opération non supporté");
         }

@@ -1,5 +1,6 @@
 package org.albarakadigital.service;
 
+import jakarta.persistence.EntityNotFoundException;
 import org.albarakadigital.entity.Account;
 import org.albarakadigital.entity.Operation;
 import org.albarakadigital.entity.enums.OperationStatus;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -23,7 +25,7 @@ public class OperationServiceImpl implements OperationService {
     @Transactional
     public Operation createDeposit(Long accountId, Double amount) {
         Account account = accountRepository.findById(accountId)
-                .orElseThrow(() -> new RuntimeException("Compte non trouvé"));
+                .orElseThrow(() -> new EntityNotFoundException("Compte non trouvé"));
 
         Operation operation = new Operation();
         operation.setType(OperationType.DEPOSIT);
@@ -46,7 +48,7 @@ public class OperationServiceImpl implements OperationService {
     @Transactional
     public Operation createWithdrawal(Long accountId, Double amount) {
         Account account = accountRepository.findById(accountId)
-                .orElseThrow(() -> new RuntimeException("Compte non trouvé"));
+                .orElseThrow(() -> new EntityNotFoundException("Compte non trouvé"));
 
         if (account.getBalance() < amount) {
             throw new RuntimeException("Solde insuffisant");
@@ -73,10 +75,10 @@ public class OperationServiceImpl implements OperationService {
     @Transactional
     public Operation createTransfer(Long sourceAccountId, String destinationAccountNumber, Double amount) {
         Account source = accountRepository.findById(sourceAccountId)
-                .orElseThrow(() -> new RuntimeException("Compte source non trouvé"));
+                .orElseThrow(() -> new EntityNotFoundException("Compte source non trouvé"));
 
         Account destination = accountRepository.findByAccountNumber(destinationAccountNumber)
-                .orElseThrow(() -> new RuntimeException("Compte destination non trouvé"));
+                .orElseThrow(() -> new EntityNotFoundException("Compte destination non trouvé"));
 
         if (source.getBalance() < amount) {
             throw new RuntimeException("Solde insuffisant sur le compte source");
@@ -103,5 +105,9 @@ public class OperationServiceImpl implements OperationService {
         }
 
         return operationRepository.save(operation);
+    }
+
+    public List<Operation> getOperationsByAccount(Long accountId) {
+        return operationRepository.findByAccountSource_Id(accountId);
     }
 }

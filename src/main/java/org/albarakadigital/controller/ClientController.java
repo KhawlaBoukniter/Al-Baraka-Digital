@@ -12,6 +12,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -61,5 +62,13 @@ public class ClientController {
     public ResponseEntity<String> uploadDocument(@PathVariable Long id, @RequestPart("file") MultipartFile file) {
         Document document = documentService.uploadJustificatif(id, file);
         return ResponseEntity.ok("Justificatif uploadé avec ID : " + document.getId());
+    }
+
+    @GetMapping("/api/client/operations")
+    public ResponseEntity<List<Operation>> getOperations(Authentication authentication) {
+        String email = authentication.getName();
+        User user = clientService.getUserByEmail(email);
+        List<Operation> operations = operationService.getOperationsByAccount(user.getAccount().getId());
+        return ResponseEntity.ok(operations);
     }
 }

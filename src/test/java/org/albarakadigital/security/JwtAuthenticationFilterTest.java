@@ -1,12 +1,9 @@
-package org.albarakadigital.service;
+package org.albarakadigital.security;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.albarakadigital.security.CustomUserDetailsService;
-import org.albarakadigital.security.JwtAuthenticationFilter;
-import org.albarakadigital.security.JwtUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;

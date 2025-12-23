@@ -1,6 +1,5 @@
-package org.albarakadigital.service;
+package org.albarakadigital.controller;
 
-import org.albarakadigital.controller.AuthController;
 import org.albarakadigital.security.CustomUserDetailsService;
 import org.albarakadigital.security.JwtUtils;
 import org.junit.jupiter.api.Test;

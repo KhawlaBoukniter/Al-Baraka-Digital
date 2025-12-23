@@ -1,0 +1,24 @@
+version: '3.8'
+services:
+  db:
+    image: postgres:14
+    restart: always
+    environment:
+      POSTGRES_DB: albaraka
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+
+  backend:
+    build: .
+    restart: always
+    environment:
+      DB_URL: jdbc:postgresql://db:5432/albaraka
+      DB_USER: postgres
+      DB_PASSWORD: postgres
+      JWT_SECRET: 760dd8a6f14d3ff63f266801fb40e74b69ee5bb53eae088b9c9a229620764eb3
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db

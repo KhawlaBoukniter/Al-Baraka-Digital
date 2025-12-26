@@ -1,5 +1,6 @@
 package org.albarakadigital.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.Data;
 import org.albarakadigital.entity.enums.Role;
@@ -29,7 +30,8 @@ public class User {
 
     private LocalDateTime createdAt;
 
-    @OneToOne(mappedBy = "owner")
+    @OneToOne(mappedBy = "owner", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnoreProperties("owner")
     private Account account;
 
 }

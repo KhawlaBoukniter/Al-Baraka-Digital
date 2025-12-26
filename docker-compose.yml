@@ -2,23 +2,47 @@ version: '3.8'
 services:
   db:
     image: postgres:14
+    container_name: albaraka-db
     restart: always
     environment:
       POSTGRES_DB: albaraka
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
+    volumes:
+      - pgdata:/var/lib/postgresql/data
     ports:
       - "5432:5432"
 
+  keycloak:
+    image: quay.io/keycloak/keycloak:24.0
+    container_name: albaraka-keycloak
+    command: start-dev --import-realm
+    environment:
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: admin
+    ports:
+      - "8180:8080"
+    volumes:
+      - keycloak_data:/opt/keycloak/data
+      - ./keycloak-imports:/opt/keycloak/data/import
+
   backend:
     build: .
+    container_name: albaraka-backend
     restart: always
+    depends_on:
+      - db
+      - keycloak
     environment:
       DB_URL: jdbc:postgresql://db:5432/albaraka
       DB_USER: postgres
       DB_PASSWORD: postgres
       JWT_SECRET: 760dd8a6f14d3ff63f266801fb40e74b69ee5bb53eae088b9c9a229620764eb3
+      SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI: http://localhost:8180/realms/albaraka
+      SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWK_SET_URI: http://keycloak:8080/realms/albaraka/protocol/openid-connect/certs
     ports:
       - "8080:8080"
-    depends_on:
-      - db
+
+volumes:
+  pgdata:
+  keycloak_data:

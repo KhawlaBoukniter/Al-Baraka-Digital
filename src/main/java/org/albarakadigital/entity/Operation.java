@@ -1,5 +1,6 @@
 package org.albarakadigital.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.Data;
 import org.albarakadigital.entity.Account;
@@ -33,10 +34,12 @@ public class Operation {
 
     @ManyToOne
     @JoinColumn(name = "account_source_id")
+    @JsonIgnoreProperties({"owner", "accountSource", "accountDestination"})
     private Account accountSource;
 
     @ManyToOne
     @JoinColumn(name = "account_destination_id")
+    @JsonIgnoreProperties({"owner", "accountSource", "accountDestination"})
     private Account accountDestination;
 
 }

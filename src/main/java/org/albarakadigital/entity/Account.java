@@ -1,5 +1,6 @@
 package org.albarakadigital.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -19,6 +20,7 @@ public class Account {
 
     @OneToOne
     @JoinColumn(name = "owner_id")
+    @JsonIgnoreProperties("account")
     private User owner;
 
 }

@@ -71,11 +71,16 @@ public class SecurityConfig {
                         .defaultSuccessUrl("/", true)
                         .permitAll()
                 )
+                .rememberMe(rememberMe -> rememberMe
+                        .key("unique-and-secret-key-albaraka-2025")
+                        .tokenValiditySeconds(60 * 60 * 24 * 30)
+                        .rememberMeParameter("remember-me")
+                )
                 .logout(logout -> logout
                         .logoutUrl("/logout")
                         .logoutSuccessUrl("/login?logout")
                         .invalidateHttpSession(true)
-                        .deleteCookies("JSESSIONID")
+                        .deleteCookies("JSESSIONID", "remember-me")
                         .permitAll()
                 )
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);

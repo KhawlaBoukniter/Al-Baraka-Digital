@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Dashboard Agent</title>
+    <meta charset="UTF-8">
+</head>
+<body>
+<h1>Bienvenue, <span th:text="${email}"></span></h1>
+<h2>Espace Agent Bancaire</h2>
+<p><a href="/api/agent/operations/pending">Voir les opérations en attente de validation</a></p>
+<hr>
+<a href="/logout">Déconnexion</a>
+</body>
+</html>

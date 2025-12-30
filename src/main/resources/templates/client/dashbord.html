@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/springsecurity">
+<head>
+    <title>Dashboard Client</title>
+    <meta charset="UTF-8">
+    <style> body { font-family: Arial; padding: 40px; } a { color: #007bff; } </style>
+</head>
+<body>
+<h1>Bienvenue, <span th:text="${email}"></span></h1>
+<h2>Espace Client</h2>
+<p><a href="/api/client/operations">Voir mes opérations</a></p>
+<p><a href="/api/client/register">Créer un nouveau compte client (test)</a></p>
+<hr>
+<a href="/logout">Déconnexion</a>
+</body>
+</html>

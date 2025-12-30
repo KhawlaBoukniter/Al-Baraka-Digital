@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Dashboard Admin</title>
+    <meta charset="UTF-8">
+</head>
+<body>
+<h1>Bienvenue, <span th:text="${email}"></span></h1>
+<h2>Espace Administrateur</h2>
+<p>Gestion des utilisateurs via API :</p>
+<ul>
+    <li>POST /api/admin/users → créer</li>
+    <li>PUT /api/admin/users/{id} → modifier</li>
+    <li>DELETE /api/admin/users/{id} → supprimer</li>
+</ul>
+<hr>
+<a href="/logout">Déconnexion</a>
+</body>
+</html>

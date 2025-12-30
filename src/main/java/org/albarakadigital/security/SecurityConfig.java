@@ -57,7 +57,8 @@ public class SecurityConfig {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/auth/**", "/api/client/register", "/login", "/templates/**", "/css/**", "/js/**").permitAll()
-                        .requestMatchers("/api/client/**", "/", "/client/dashboard").hasRole("CLIENT")
+                        .requestMatchers("/").authenticated()
+                        .requestMatchers("/api/client/**", "/client/dashboard").hasRole("CLIENT")
                         .requestMatchers("/api/agent/**", "/agent/dashboard").hasRole("AGENT_BANCAIRE")
                         .requestMatchers("/api/admin/**", "/admin/dashboard").hasRole("ADMIN")
                         .anyRequest().authenticated()

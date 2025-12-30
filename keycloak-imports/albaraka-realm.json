@@ -1,0 +1,73 @@
+{
+  "id": "albaraka",
+  "realm": "albaraka",
+  "enabled": true,
+  "sslRequired": "external",
+  "registrationAllowed": false,
+  "loginWithEmailAllowed": true,
+  "duplicateEmailsAllowed": false,
+  "resetPasswordAllowed": true,
+  "editUsernameAllowed": false,
+  "bruteForceProtected": true,
+  "defaultRole": {
+    "name": "default-roles-albaraka",
+    "description": "${role_default-roles}",
+    "composite": true,
+    "clientRole": false
+  },
+  "requiredCredentials": ["password"],
+  "users": [
+    {
+      "username": "test",
+      "enabled": true,
+      "emailVerified": false,
+      "firstName": "test",
+      "lastName": "test",
+      "email": "test@test.com",
+      "credentials": [
+        {
+          "type": "password",
+          "value": "test",
+          "temporary": false
+        }
+      ],
+      "realmRoles": ["AGENT_BANCAIRE"]
+    }
+  ],
+  "roles": {
+    "realm": [
+      {
+        "name": "AGENT_BANCAIRE",
+        "description": "Role for banking agents",
+        "composite": false,
+        "clientRole": false
+      }
+    ]
+  },
+  "clientScopes": [
+    {
+      "name": "operations.read",
+      "description": "Read pending operations",
+      "protocol": "openid-connect",
+      "attributes": {
+        "include.in.token.scope": "true",
+        "display.on.consent.screen": "false"
+      }
+    }
+  ],
+  "clients": [
+    {
+      "clientId": "albaraka-client",
+      "enabled": true,
+      "publicClient": true,
+      "standardFlowEnabled": true,
+      "implicitFlowEnabled": false,
+      "directAccessGrantsEnabled": true,
+      "serviceAccountsEnabled": false,
+      "redirectUris": ["*"],
+      "webOrigins": ["*"],
+      "defaultClientScopes": ["profile", "email", "operations.read"],
+      "optionalClientScopes": ["address", "phone", "offline_access"]
+    }
+  ]
+}

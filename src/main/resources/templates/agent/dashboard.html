@@ -1,14 +1,181 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head>
-    <title>Dashboard Agent</title>
-    <meta charset="UTF-8">
-</head>
-<body>
-<h1>Bienvenue, <span th:text="${email}"></span></h1>
-<h2>Espace Agent Bancaire</h2>
-<p><a href="/api/agent/operations/pending">Voir les opérations en attente de validation</a></p>
-<hr>
-<a href="/logout">Déconnexion</a>
+<head th:replace="~{fragments/header :: header('Tableau de bord Agent')}"></head>
+<body class="bg-gray-50">
+
+<div class="flex min-h-screen">
+    <aside class="w-64 hidden md:block fixed h-screen">
+        <div th:replace="~{fragments/sidebar-agent}"></div>
+    </aside>
+
+    <main class="flex-1 md:ml-64 pt-20 md:pt-0 p-6 lg:p-8">
+        <div class="max-w-7xl mx-auto">
+            <div class="mb-8">
+                <h2 class="text-2xl font-bold text-gray-900 mb-2">Espace Agent Bancaire</h2>
+                <p class="text-gray-600">Gérez et validez les opérations bancaires</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                <div class="bg-gradient-to-br from-orange-300 to-orange-500 rounded-xl shadow-lg p-6 text-white transform hover:scale-105 transition-all duration-200">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="p-2 bg-white bg-opacity-20 rounded-lg backdrop-blur-sm">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                        </div>
+                        <span class="text-xl font-bold bg-white bg-opacity-20 px-3 py-1 rounded-full">3</span>
+                    </div>
+                    <div class="text-xl font-semibold mb-1">En attente</div>
+                    <div class="text-orange-100 text-sm">Opérations à valider</div>
+                </div>
+
+                <div class="bg-gradient-to-br from-green-400 to-green-500 rounded-xl shadow-lg p-6 text-white transform hover:scale-105 transition-all duration-200">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="p-2 bg-white bg-opacity-20 rounded-lg backdrop-blur-sm">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                        </div>
+                        <span class="text-xl font-bold bg-white bg-opacity-20 px-3 py-1 rounded-full">12</span>
+                    </div>
+                    <div class="text-xl font-semibold mb-1">Validées</div>
+                    <div class="text-green-100 text-sm">Aujourd'hui</div>
+                </div>
+
+                <div class="bg-gradient-to-br from-red-400 to-red-500 rounded-xl shadow-lg p-6 text-white transform hover:scale-105 transition-all duration-200">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="p-2 bg-white bg-opacity-20 rounded-lg backdrop-blur-sm">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                        </div>
+                        <span class="text-xl font-bold bg-white bg-opacity-20 px-3 py-1 rounded-full">1</span>
+                    </div>
+                    <div class="text-xl font-semibold mb-1">Rejetées</div>
+                    <div class="text-red-100 text-sm">Aujourd'hui</div>
+                </div>
+
+                <div class="bg-gradient-to-br from-blue-400 to-blue-600 rounded-xl shadow-lg p-6 text-white transform hover:scale-105 transition-all duration-200">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="p-2 bg-white bg-opacity-20 rounded-lg backdrop-blur-sm">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="text-xl font-bold mb-1">35,450 DH</div>
+                    <div class="text-blue-100 text-sm">Montant total en attente</div>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-xl shadow-lg p-8 mb-8 border-l-4 border-orange-500">
+                <div class="flex items-start justify-between mb-6">
+                    <div>
+                        <h3 class="text-2xl font-bold text-gray-900 mb-2">Opérations en attente de validation</h3>
+                        <p class="text-gray-600">Vous avez <span class="font-bold text-orange-600">3 opérations</span> supérieures à 10 000 DH nécessitant votre validation</p>
+                    </div>
+                    <div class="px-4 py-2 bg-orange-100 text-orange-700 rounded-full font-bold text-lg">
+                        3
+                    </div>
+                </div>
+
+                <div class="flex flex-col sm:flex-row gap-4">
+                    <a href="/api/agent/operations/pending" class="flex-1 bg-gradient-to-r from-orange-300 to-orange-500 hover:from-orange-400 hover:to-orange-600 text-white font-semibold py-4 px-6 rounded-lg shadow-md hover:shadow-xl transform hover:scale-105 transition-all duration-200 text-center">
+                        <div class="flex items-center justify-center gap-2">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
+                            </svg>
+                            <span>Voir et valider les opérations</span>
+                        </div>
+                    </a>
+
+                    <a href="/agent/history" class="flex-1 bg-white border-2 border-gray-300 hover:border-blue-500 text-gray-700 hover:text-blue-600 font-semibold py-4 px-6 rounded-lg shadow-md hover:shadow-xl transform hover:scale-105 transition-all duration-200 text-center">
+                        <div class="flex items-center justify-center gap-2">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                            <span>Consulter l'historique</span>
+                        </div>
+                    </a>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <div class="bg-white rounded-xl shadow-lg p-6">
+                    <h3 class="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
+                        <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                        </svg>
+                        Activité récente
+                    </h3>
+                    <div class="space-y-3">
+                        <div class="flex items-center gap-3 p-3 bg-green-50 rounded-lg">
+                            <div class="w-2 h-2 bg-green-500 rounded-full"></div>
+                            <div class="flex-1">
+                                <p class="text-sm font-medium text-gray-900">Opération validée</p>
+                                <p class="text-xs text-gray-500">Il y a 5 minutes</p>
+                            </div>
+                            <span class="text-sm font-bold text-green-600">+5,000 DH</span>
+                        </div>
+                        <div class="flex items-center gap-3 p-3 bg-red-50 rounded-lg">
+                            <div class="w-2 h-2 bg-red-500 rounded-full"></div>
+                            <div class="flex-1">
+                                <p class="text-sm font-medium text-gray-900">Opération rejetée</p>
+                                <p class="text-xs text-gray-500">Il y a 15 minutes</p>
+                            </div>
+                            <span class="text-sm font-bold text-red-600">-2,500 DH</span>
+                        </div>
+                        <div class="flex items-center gap-3 p-3 bg-blue-50 rounded-lg">
+                            <div class="w-2 h-2 bg-blue-500 rounded-full"></div>
+                            <div class="flex-1">
+                                <p class="text-sm font-medium text-gray-900">Nouvelle demande reçue</p>
+                                <p class="text-xs text-gray-500">Il y a 30 minutes</p>
+                            </div>
+                            <span class="text-sm font-bold text-blue-600">12,000 DH</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-xl shadow-lg p-6">
+                    <h3 class="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
+                        <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                        </svg>
+                        Performance du jour
+                    </h3>
+                    <div class="space-y-4">
+                        <div>
+                            <div class="flex justify-between mb-2">
+                                <span class="text-sm font-medium text-gray-700">Taux de validation</span>
+                                <span class="text-sm font-bold text-gray-900">92%</span>
+                            </div>
+                            <div class="w-full bg-gray-200 rounded-full h-2">
+                                <div class="bg-gradient-to-r from-green-500 to-green-600 h-2 rounded-full" style="width: 92%"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between mb-2">
+                                <span class="text-sm font-medium text-gray-700">Temps moyen de traitement</span>
+                                <span class="text-sm font-bold text-gray-900">3.5 min</span>
+                            </div>
+                            <div class="w-full bg-gray-200 rounded-full h-2">
+                                <div class="bg-gradient-to-r from-blue-500 to-blue-600 h-2 rounded-full" style="width: 70%"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between mb-2">
+                                <span class="text-sm font-medium text-gray-700">Opérations traitées</span>
+                                <span class="text-sm font-bold text-gray-900">13/15</span>
+                            </div>
+                            <div class="w-full bg-gray-200 rounded-full h-2">
+                                <div class="bg-gradient-to-r from-purple-500 to-purple-600 h-2 rounded-full" style="width: 87%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
 </body>
 </html>

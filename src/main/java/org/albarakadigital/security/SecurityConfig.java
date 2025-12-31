@@ -53,15 +53,30 @@ public class SecurityConfig {
     @Order(2)
     public SecurityFilterChain jwtFilterChain(HttpSecurity http) throws Exception {
         http
-                .securityMatcher("/api/**")
                 .csrf(csrf -> csrf.disable())
-                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/auth/**", "/api/client/register").permitAll()
-                        .requestMatchers("/api/client/**").hasRole("CLIENT")
-                        .requestMatchers("/api/agent/**").hasRole("AGENT_BANCAIRE")
-                        .requestMatchers("/api/admin/**").hasRole("ADMIN")
+                        .requestMatchers("/auth/**", "/api/client/register", "/login", "/templates/**", "/css/**", "/js/**").permitAll()
+                        .requestMatchers("/").authenticated()
+                        .requestMatchers("/api/client/**", "/client/dashboard").hasRole("CLIENT")
+                        .requestMatchers("/api/agent/**", "/agent/dashboard").hasRole("AGENT_BANCAIRE")
+                        .requestMatchers("/api/admin/**", "/admin/dashboard").hasRole("ADMIN")
                         .anyRequest().authenticated()
+                )
+                .formLogin(form -> form
+                        .loginPage("/login")
+                        .loginProcessingUrl("/auth/login")
+                        .usernameParameter("email")
+                        .passwordParameter("password")
+                        .defaultSuccessUrl("/", true)
+                        .permitAll()
+                )
+                .logout(logout -> logout
+                        .logoutUrl("/logout")
+                        .logoutSuccessUrl("/login?logout")
+                        .invalidateHttpSession(true)
+                        .deleteCookies("JSESSIONID")
+                        .permitAll()
                 )
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 

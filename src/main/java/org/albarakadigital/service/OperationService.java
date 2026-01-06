@@ -1,5 +1,6 @@
 package org.albarakadigital.service;
 
+import org.albarakadigital.entity.AIAnalysis;
 import org.albarakadigital.entity.Operation;
 
 import java.util.List;
@@ -9,4 +10,6 @@ public interface OperationService {
     Operation createWithdrawal(Long accountId, Double amount);
     Operation createTransfer(Long sourceAccountId, String destinationAccountNumber, Double amount);
     List<Operation> getOperationsByAccount(Long accountId);
+    AIAnalysis analyzeAndExecute(Long operationId, Long documentId);
+    Operation getOperationById(Long id);
 }

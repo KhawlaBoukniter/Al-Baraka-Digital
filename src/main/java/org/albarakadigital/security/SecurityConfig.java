@@ -1,6 +1,7 @@
 package org.albarakadigital.security;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
@@ -28,6 +29,12 @@ import java.util.List;
 public class SecurityConfig {
 
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
+
+    @Value("${spring.security.oauth2.resourceserver.jwt.jwk-set-uri}")
+    private String jwkSetUri;
+
+    @Value("${spring.security.oauth2.resourceserver.jwt.issuer-uri}")
+    private String issuerUri;
 
     @Bean
     @Order(1)
@@ -62,6 +69,11 @@ public class SecurityConfig {
                         .requestMatchers("/api/agent/**").hasRole("AGENT_BANCAIRE")
                         .requestMatchers("/api/admin/**").hasRole("ADMIN")
                         .anyRequest().authenticated()
+                )
+                .rememberMe(rememberMe -> rememberMe
+                        .key("unique-and-secret-key-albaraka-2025")
+                        .tokenValiditySeconds(60 * 60 * 24 * 30)
+                        .rememberMeParameter("remember-me")
                 )
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
@@ -102,13 +114,9 @@ public class SecurityConfig {
 
     @Bean
     public JwtDecoder oauth2JwtDecoder() {
-        String jwkSetUri = "http://keycloak:8080/realms/albaraka/protocol/openid-connect/certs";
-        String issuer = "http://localhost:8180/realms/albaraka";
-
         NimbusJwtDecoder decoder = NimbusJwtDecoder.withJwkSetUri(jwkSetUri).build();
-        OAuth2TokenValidator<Jwt> validator = JwtValidators.createDefaultWithIssuer(issuer);
+        OAuth2TokenValidator<Jwt> validator = JwtValidators.createDefaultWithIssuer(issuerUri);
         decoder.setJwtValidator(validator);
-
         return decoder;
     }
 }

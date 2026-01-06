@@ -1,5 +1,6 @@
 package org.albarakadigital.controller;
 
+import org.albarakadigital.entity.AIAnalysis;
 import org.albarakadigital.entity.Document;
 import org.albarakadigital.entity.Operation;
 import org.albarakadigital.entity.User;
@@ -59,9 +60,28 @@ public class ClientController {
     }
 
     @PostMapping("/api/client/operations/{id}/document")
-    public ResponseEntity<String> uploadDocument(@PathVariable Long id, @RequestPart("file") MultipartFile file) {
-        Document document = documentService.uploadJustificatif(id, file);
-        return ResponseEntity.ok("Justificatif uploadé avec ID : " + document.getId());
+    public ResponseEntity<?> uploadDocument(@PathVariable Long id, @RequestPart("file") MultipartFile file) {
+        try {
+            if (file == null || file.isEmpty()) {
+                return ResponseEntity.badRequest().body("Fichier requis");
+            }
+
+            if (!file.getContentType().contains("pdf")) {
+                return ResponseEntity.badRequest().body("Seuls les PDF sont acceptés");
+            }
+
+            if (file.getSize() > 5 * 1024 * 1024) {
+                return ResponseEntity.badRequest().body("Fichier trop volumineux (max 5MB)");
+            }
+
+            Document document = documentService.uploadJustificatif(id, file);
+
+            AIAnalysis result = operationService.analyzeAndExecute(id, document.getId());
+
+            return ResponseEntity.ok(result);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Erreur: " + e.getMessage());
+        }
     }
 
     @GetMapping("/api/client/operations")

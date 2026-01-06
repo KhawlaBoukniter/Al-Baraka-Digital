@@ -1,1 +1,36 @@
-/* You can add global styles to this file, and also import other style files */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --primary: #208285;
+  --secondary: #5e5240;
+  --success: #32b8c6;
+  --danger: #c01527;
+  --warning: #a84b2f;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  height: 100%;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+  color: #1f2121;
+  background-color: #fcfcf9;
+}
+
+.btn-primary {
+  @apply px-4 py-2 bg-primary text-white rounded-lg hover:opacity-90 transition-all duration-200;
+}
+
+.btn-secondary {
+  @apply px-4 py-2 bg-secondary text-white rounded-lg hover:opacity-90 transition-all duration-200;
+}
+
+.card {
+  @apply bg-white rounded-lg border border-gray-200 shadow-sm;
+}

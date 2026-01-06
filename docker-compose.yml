@@ -22,16 +22,18 @@ services:
     environment:
       KEYCLOAK_ADMIN: admin
       KEYCLOAK_ADMIN_PASSWORD: admin
+      KC_HEALTH_ENABLED: true
     ports:
       - "8180:8080"
     volumes:
       - keycloak_data:/opt/keycloak/data
       - ./keycloak-imports:/opt/keycloak/data/import
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8080/health/ready"]
+      test: [ "CMD-SHELL", "exec 3<>/dev/tcp/127.0.0.1/8080; echo -e 'GET /health/ready HTTP/1.1\r\nHost: localhost\r\nConnection: close\r\n\r\n' >&3; grep -q '200 OK' <&3 && exit 0 || exit 1" ]
       interval: 30s
       timeout: 10s
-      retries: 5
+      retries: 15
+      start_period: 60s
     networks:
       - app-network
 
@@ -58,9 +60,26 @@ services:
     networks:
       - app-network
 
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: albaraka-pgadmin
+    restart: always
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@albaraka.com
+      PGADMIN_DEFAULT_PASSWORD: adminpass
+    ports:
+      - "8081:80"
+    volumes:
+      - pgadmin_data:/var/lib/pgadmin
+    depends_on:
+      - db
+    networks:
+      - app-network
+
 volumes:
   pgdata:
   keycloak_data:
+  pgadmin_data:
 
 networks:
   app-network:

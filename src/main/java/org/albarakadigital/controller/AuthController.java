@@ -31,13 +31,14 @@ public class AuthController {
     public ResponseEntity<String> login(@RequestBody Map<String, String> credentials) {
         String email = credentials.get("email");
         String password = credentials.get("password");
+        Boolean rememberMe = Boolean.parseBoolean(credentials.getOrDefault("remember-me", "false"));
 
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(email, password)
         );
 
         UserDetails userDetails = userDetailsService.loadUserByUsername(email);
-        String jwt = jwtUtils.generateToken(userDetails);
+        String jwt = jwtUtils.generateToken(userDetails, rememberMe);
 
         return ResponseEntity.ok(jwt);
     }

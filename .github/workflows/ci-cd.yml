@@ -2,9 +2,9 @@ name: CI/CD Pipeline - Al Baraka Digital V2
 
 on:
   push:
-    branches: [ main ]
+    branches: [ main, api-spring-ai ]
   pull_request:
-    branches: [ main ]
+    branches: [ main, api-spring-ai ]
 
 jobs:
   build-and-deploy:

@@ -37,6 +37,6 @@ jobs:
           context: .
           push: true
           tags: |
-            ghcr.io/${{ github.repository }}/albaraka-backend:latest
-            ghcr.io/${{ github.repository }}/albaraka-backend:${{ github.sha }}
+            ghcr.io/khawlaboukniter/al-baraka-digital/albaraka-backend:latest
+            ghcr.io/khawlaboukniter/al-baraka-digital/albaraka-backend:${{ github.sha }}
 
